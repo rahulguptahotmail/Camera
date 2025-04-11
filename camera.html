@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <video id="video" src=""></video>
+    <button id="capture">Capture</button>
+    <canvas id="canvas" style="display: none"></canvas>
+    <img id="img" style="display: none" src="" alt="image" />
+    <a id="download" href="" download style="display: none">download</a>
+
+    <!-- script  -->
+
+    <script>
+      const video = document.getElementById("video");
+      const button = document.getElementById("capture");
+      const canvas = document.getElementById("canvas");
+      const img = document.getElementById("img");
+      const download = document.getElementById("download");
+
+      const startCam = async () => {
+        try {
+          const stream = await window.navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          video.srcObject = stream;
+          video.play();
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      startCam();
+
+      //   capture Image
+      button.addEventListener("click", () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        img.src = canvas.toDataURL("image/png");
+        img.style.display = "block";
+        // video.style.display='none';
+
+        // download
+        download.href = canvas.toDataURL("image/jpg");
+        download.style.display = "block";
+      });
+    </script>
+  </body>
+</html>
